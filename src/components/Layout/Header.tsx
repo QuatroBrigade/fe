@@ -5,6 +5,7 @@ import {
   IconMenu2,
   IconUsers,
 } from "@tabler/icons-react";
+import { config } from "config/config";
 import Link from "next/link";
 
 type PropsType = {};
@@ -18,7 +19,7 @@ const Header = ({}: PropsType) => {
             component="a"
             className="text-base font-bold block rounded"
           >
-            townsy
+            {config.name}
           </UnstyledButton>
         </Link>
       </div>
