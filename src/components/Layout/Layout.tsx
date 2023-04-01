@@ -1,4 +1,3 @@
-import Header from "components/Layout/Header";
 import { config } from "config/config";
 import Head from "next/head";
 import { ReactNode } from "react";
@@ -15,8 +14,8 @@ const Layout = ({ children, title, className = "" }: PropsType) => {
         />
         <title>{`${title ? `${title} | ` : ""}${config.name}`}</title>
       </Head>
-      <Header />
-      <main className={`${className} h-full w-full flex-shrink-0`}>
+      {/* <Header /> */}
+      <main className={`${className} min-h-full w-full flex-shrink-0`}>
         {children}
       </main>
     </>
