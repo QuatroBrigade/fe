@@ -1,4 +1,10 @@
-import { UnstyledButton } from "@mantine/core";
+import { Badge, Menu, ThemeIcon, UnstyledButton } from "@mantine/core";
+import {
+  IconListDetails,
+  IconLogout,
+  IconMenu2,
+  IconUsers,
+} from "@tabler/icons-react";
 import Link from "next/link";
 
 type PropsType = {};
@@ -10,16 +16,43 @@ const Header = ({}: PropsType) => {
         <Link href="/" passHref>
           <UnstyledButton<"a">
             component="a"
-            className="text-base font-medium block rounded"
+            className="text-base font-bold block rounded"
           >
-            TODO
+            townsy
           </UnstyledButton>
         </Link>
       </div>
 
-      <nav>
-        <ul className="flex items-center gap-2"></ul>
-      </nav>
+      <Menu shadow="md" width={200} position="bottom-end">
+        <Menu.Target>
+          <UnstyledButton className="flex active:translate-y-px border-solid items-center gap-2 p-1 border border-gray-200 rounded-full pr-3">
+            <ThemeIcon
+              variant="light"
+              color="gray"
+              size="lg"
+              className="rounded-full"
+            >
+              <IconMenu2 size={20} />
+            </ThemeIcon>
+            <p className="font-semibold text-gray-700">John D.</p>
+          </UnstyledButton>
+        </Menu.Target>
+
+        <Menu.Dropdown>
+          <Badge className="w-full mb-2">Občan</Badge>
+
+          <Menu.Item icon={<IconUsers size={14} />}>Moje komunity</Menu.Item>
+          <Menu.Item icon={<IconListDetails size={14} />}>
+            Moje príspevky
+          </Menu.Item>
+
+          <Menu.Divider />
+
+          <Menu.Item color="red" icon={<IconLogout size={14} />}>
+            Odhlásiť sa
+          </Menu.Item>
+        </Menu.Dropdown>
+      </Menu>
     </header>
   );
 };

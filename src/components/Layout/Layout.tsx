@@ -1,6 +1,7 @@
 import { config } from "config/config";
 import Head from "next/head";
 import { ReactNode } from "react";
+import Header from "./Header";
 
 type PropsType = { children: ReactNode; title?: string; className?: string };
 
@@ -14,7 +15,7 @@ const Layout = ({ children, title, className = "" }: PropsType) => {
         />
         <title>{`${title ? `${title} | ` : ""}${config.name}`}</title>
       </Head>
-      {/* <Header /> */}
+      <Header />
       <main className={`${className} min-h-full w-full flex-shrink-0`}>
         {children}
       </main>

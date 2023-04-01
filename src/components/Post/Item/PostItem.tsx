@@ -1,5 +1,4 @@
 import {
-  Anchor,
   AspectRatio,
   Badge,
   Box,
@@ -14,7 +13,6 @@ import { IconChevronsUp, IconEdit, IconMessage } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import { printDateInPastRelative } from "lib/date";
 import Image from "next/image";
-import Link from "next/link";
 import { PostType } from "types/post";
 import { usePostEditState } from "../Edit/PostEdit";
 import PostItemVote from "./PostItemVote";
@@ -60,9 +58,7 @@ const PostItem = ({
         <div className="border-l border-gray-200">
           <div className="p-4 border-b border-b-gray-200">
             <div className="flex items-center gap-2">
-              <Link href={`/user/${userId}`} passHref>
-                <Anchor className="font-medium text-gray">Vavro Murcko</Anchor>
-              </Link>
+              <p className="font-medium text-gray">John Doe</p>
               <Badge>Občan</Badge>
             </div>
 

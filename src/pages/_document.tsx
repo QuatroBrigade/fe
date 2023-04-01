@@ -22,7 +22,7 @@ class MyDocument extends Document {
             rel="stylesheet"
           />
         </Head>
-        <body className="w-full font-sans antialiased">
+        <body className="w-full font-sans antialiased text-base">
           <Main />
           <NextScript />
         </body>

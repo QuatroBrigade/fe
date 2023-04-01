@@ -1,4 +1,4 @@
 export type MapPoint = {
-  lat: [number, number];
-  lng: [number, number];
+  lat: number;
+  lng: number;
 };

@@ -25,8 +25,8 @@ const DATA: PostType[] = [
     title: "Nová zastávka autobusu - Ulica 45",
     desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore praesentium alias ad odio illo officiis, ab culpa sit! Dicta nobis ipsum corrupti voluptate fuga quam commodi quidem debitis laboriosam provident.",
     location: {
-      lat: [1, 2],
-      lng: [2, 3],
+      lat: 1,
+      lng: 2,
     },
     radius: [],
     createdAt: dayjs("2023-02-12").toDate(),
