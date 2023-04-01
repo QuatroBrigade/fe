@@ -20,7 +20,7 @@ export default function Map() {
       {geoData.lat && geoData.lng && (
         <Marker position={[geoData.lat, geoData.lng]} />
       )}
-      <ChangeView coords={[0, 0]} />
+      <ChangeView coords={[geoData.lat, geoData.lng]} />
     </MapContainer>
   );
 }
