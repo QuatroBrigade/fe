@@ -1,4 +1,5 @@
 import { createEmotionCache, MantineProvider } from "@mantine/core";
+import { ModalsProvider } from "@mantine/modals";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { RouterTransition } from "components/misc/RouterTransition";
@@ -32,11 +33,13 @@ function MyApp({ Component, pageProps }: AppProps) {
       }}
       emotionCache={emotionCache}
     >
-      <QueryClientProvider client={queryClient}>
-        <RouterTransition />
-        <Component {...pageProps} />
-        <ReactQueryDevtools />
-      </QueryClientProvider>
+      <ModalsProvider>
+        <QueryClientProvider client={queryClient}>
+          <RouterTransition />
+          <Component {...pageProps} />
+          <ReactQueryDevtools />
+        </QueryClientProvider>
+      </ModalsProvider>
     </MantineProvider>
   );
 }

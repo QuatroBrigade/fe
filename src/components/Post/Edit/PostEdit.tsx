@@ -1,28 +1,51 @@
-import { Button, Modal, TextInput, Textarea } from "@mantine/core";
+import {
+  Button,
+  Modal,
+  TextInput,
+  Textarea,
+  useMantineTheme,
+} from "@mantine/core";
 import { useEffect, useState } from "react";
-import { PostUpdateType } from "types/post";
+import { PostType } from "types/post";
 import { create } from "zustand";
+import { shallow } from "zustand/shallow";
 
 type PropsType = {};
 
 type PostEditStateType = {
   opened: boolean;
   open: (post?: PostEditStateType["post"]) => void;
+  openNew: () => void;
   close: () => void;
   save: () => Promise<void>;
   saveStatus: "none" | "saving" | "error";
-  post: null | PostUpdateType;
+  post: Pick<PostType, "title" | "desc" | "radius"> &
+    (
+      | { id: null; location: null | PostType["location"] }
+      | Pick<PostType, "id" | "location">
+    );
+};
+
+const defaultPost: PostEditStateType["post"] = {
+  id: null,
+  location: null,
+  title: "",
+  desc: "",
+  radius: [],
 };
 
 export const usePostEditState = create<PostEditStateType>((set, get) => ({
   opened: false,
   open: (post) => {
-    set({ post: post ?? null, opened: true });
+    set({ post, opened: true });
+  },
+  openNew: () => {
+    set({ opened: true, post: { ...defaultPost } });
   },
   close: () => {
-    set({ opened: false, post: null });
+    set({ opened: false });
   },
-  post: null,
+  post: { ...defaultPost },
   save: async () => {
     // todo
   },
@@ -30,7 +53,20 @@ export const usePostEditState = create<PostEditStateType>((set, get) => ({
 }));
 
 const PostEdit = ({}: PropsType) => {
-  const [post, setPost] = useState<PostEditStateType["post"]>(null);
+  const [post, setPost] = useState<PostEditStateType["post"]>({
+    ...defaultPost,
+  });
+
+  const setPostValue = <
+    TKey extends keyof T,
+    T = Pick<
+      NonNullable<PostEditStateType["post"]>,
+      "desc" | "location" | "radius" | "title"
+    >
+  >(
+    key: TKey,
+    value: T[TKey]
+  ) => setPost((post) => ({ ...post, [key]: value }));
 
   const { close, opened, editPost } = usePostEditState(
     ({ opened, close, post }) => ({ opened, close, editPost: post }),
@@ -38,18 +74,35 @@ const PostEdit = ({}: PropsType) => {
   );
 
   useEffect(() => {
-    setPost(editPost);
-  }, []);
+    if (opened) {
+      setPost(editPost);
+    }
+  }, [editPost, opened]);
+
+  const theme = useMantineTheme();
 
   return (
     <Modal
+      size="lg"
+      overlayProps={{
+        color: theme.colors.gray[2],
+        opacity: 0.55,
+        blur: 3,
+      }}
       centered
       opened={opened}
       onClose={close}
-      title="Pridať nový príspevok"
+      title={post.id ? "Upraviť príspevok" : "Pridať nový príspevok"}
     >
       <form noValidate className="grid grid-cols-1 gap-4">
-        <TextInput label="Nadpis" required withAsterisk size="lg" />
+        <TextInput
+          value={post.title}
+          onChange={(e) => setPostValue("title", e.target.value)}
+          label="Nadpis"
+          required
+          withAsterisk
+          size="lg"
+        />
         <Textarea
           autosize
           minRows={4}
@@ -57,14 +110,13 @@ const PostEdit = ({}: PropsType) => {
           required
           withAsterisk
           size="md"
+          value={post.desc}
+          onChange={(e) => setPostValue("desc", e.target.value)}
         />
-        <Button size="md">Pridať</Button>
+        <Button size="md">{post.id ? "Uložiť" : "Pridať"}</Button>
       </form>
     </Modal>
   );
 };
 
 export default PostEdit;
-function shallow(a: {}, b: {}): boolean {
-  throw new Error("Function not implemented.");
-}

@@ -5,7 +5,7 @@ import {
   IconUsers,
 } from "@tabler/icons-react";
 import Layout from "components/Layout/Layout";
-import { usePostEditState } from "components/Post/Edit/PostEdit";
+import PostEdit, { usePostEditState } from "components/Post/Edit/PostEdit";
 import PostItem from "components/Post/Item/PostItem";
 import Container from "components/misc/Container";
 import dayjs from "dayjs";
@@ -35,7 +35,7 @@ const DATA: PostType[] = [
 
 const Home: NextPage = () => {
   const [tab, setTab] = useState<keyof typeof TABS>("COMMUNITY");
-  const {} = usePostEditState();
+  const openNew = usePostEditState((state) => state.openNew);
   return (
     <Layout title="Domov" className="bg-gray-100">
       <section className="bg-white">
@@ -73,7 +73,7 @@ const Home: NextPage = () => {
         <Container className="py-8">
           <div className="grid grid-cols-1 gap-8">
             <UnstyledButton
-              // onClick}
+              onClick={openNew}
               className="w-full flex items-center gap-4 font-medium bg-white rounded-lg p-4 justify-center hover:shadow-xl active:translate-x-px transition-shadow"
             >
               <ThemeIcon size="lg" variant="light">
@@ -85,6 +85,8 @@ const Home: NextPage = () => {
             {DATA.map((post) => (
               <PostItem key={post.id} post={post} />
             ))}
+
+            <PostEdit />
           </div>
         </Container>
       </section>
