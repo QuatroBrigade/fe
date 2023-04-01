@@ -11,22 +11,14 @@ module.exports = {
       md: { min: "768px" },
       lg: { min: "1024px" },
       xl: { min: "1280px" },
-      "2xl": { min: "1536px" },
-      _2xl: { max: "1535.8px" },
-      _xl: { max: "1279.8px" },
-      _lg: { max: "1023.8px" },
-      _md: { max: "767.8px" },
-      _sm: { max: "639.8px" },
-      _xs: { max: "424.8px" },
     },
-    fontFamily: { sans: "Montserrat, sans-serif" },
+    fontFamily: { sans: "'Raleway', sans-serif" },
     colors: {
       inherit: "inherit",
       transparent: "transparent",
       current: "currentColor",
       white: "#fff",
-      black: "#000",
-      primary: {
+      yellow: {
         50: "#fff9db",
         100: "#fff3bf",
         200: "#ffec99",
@@ -122,7 +114,7 @@ module.exports = {
         800: "#3b5bdb",
         900: "#364fc7",
       },
-      cyan: {
+      primary: {
         50: "#e3fafc",
         100: "#c5f6fa",
         200: "#99e9f2",
