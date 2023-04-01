@@ -11,7 +11,12 @@ export type PostType = {
   radius: MapPoint[];
 };
 
-export type CreatePostType = Pick<
+export type PostCreateType = Pick<
   PostType,
   "userId" | "title" | "desc" | "location"
+>;
+
+export type PostUpdateType = Pick<
+  PostType,
+  "id" | "userId" | "title" | "desc" | "location" | "radius"
 >;
