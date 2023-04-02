@@ -8,8 +8,8 @@ import {
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetcher, getApiRoute } from "lib/msic/fetcher";
 import { ParseFromUrl } from "lib/msic/url";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
 import { PostType } from "types/post";
 import { create } from "zustand";
 import { shallow } from "zustand/shallow";
@@ -21,13 +21,22 @@ type PostEditStateType = {
   open: (post?: PostEditStateType["post"]) => void;
   openNew: () => void;
   close: () => void;
-  save: () => Promise<void>;
   saveStatus: "none" | "saving" | "error";
   post: Pick<PostType, "title" | "desc" | "radius"> &
     (
       | { id: null; location: null | PostType["location"] }
       | Pick<PostType, "id" | "location">
     );
+  setPost: <
+    TKey extends keyof T,
+    T = Pick<
+      PostEditStateType["post"],
+      "desc" | "location" | "radius" | "title"
+    >
+  >(
+    key: TKey,
+    value: T[TKey]
+  ) => void;
 };
 
 const defaultPost: PostEditStateType["post"] = {
@@ -50,17 +59,15 @@ export const usePostEditState = create<PostEditStateType>((set, get) => ({
     set({ opened: false });
   },
   post: { ...defaultPost },
-  save: async () => {
-    // todo
-  },
+  setPost: (key, value) => set({ post: { ...get().post, [key]: value } }),
   saveStatus: "none",
 }));
 
-const PostEdit = ({}: PropsType) => {
-  const [post, setPost] = useState<PostEditStateType["post"]>({
-    ...defaultPost,
-  });
+const PostEditLocation = dynamic(() => import("./PostEditLocation"), {
+  ssr: false,
+});
 
+const PostEdit = ({}: PropsType) => {
   const { query } = useRouter();
   const communityId = ParseFromUrl.number(query.communityId);
   const client = useQueryClient();
@@ -95,27 +102,10 @@ const PostEdit = ({}: PropsType) => {
     },
   });
 
-  const setPostValue = <
-    TKey extends keyof T,
-    T = Pick<
-      NonNullable<PostEditStateType["post"]>,
-      "desc" | "location" | "radius" | "title"
-    >
-  >(
-    key: TKey,
-    value: T[TKey]
-  ) => setPost((post) => ({ ...post, [key]: value }));
-
-  const { close, opened, editPost } = usePostEditState(
-    ({ opened, close, post }) => ({ opened, close, editPost: post }),
+  const { close, opened, post, setPost } = usePostEditState(
+    ({ opened, close, post, setPost }) => ({ opened, close, post, setPost }),
     shallow
   );
-
-  useEffect(() => {
-    if (opened) {
-      setPost(editPost);
-    }
-  }, [editPost, opened]);
 
   const theme = useMantineTheme();
 
@@ -142,12 +132,15 @@ const PostEdit = ({}: PropsType) => {
       >
         <TextInput
           value={post.title}
-          onChange={(e) => setPostValue("title", e.target.value)}
+          onChange={(e) => setPost("title", e.target.value)}
           label="Nadpis"
           required
           withAsterisk
           size="lg"
         />
+
+        <PostEditLocation />
+
         <Textarea
           autosize
           minRows={4}
@@ -156,7 +149,7 @@ const PostEdit = ({}: PropsType) => {
           withAsterisk
           size="md"
           value={post.desc}
-          onChange={(e) => setPostValue("desc", e.target.value)}
+          onChange={(e) => setPost("desc", e.target.value)}
         />
         <Button type="submit" size="md">
           {post.id ? "Uložiť" : "Pridať"}

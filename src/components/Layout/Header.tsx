@@ -40,7 +40,9 @@ const Header = ({}: PropsType) => {
         </Menu.Target>
 
         <Menu.Dropdown>
-          <Badge className="w-full mb-2">Občan</Badge>
+          <Badge variant="dot" className="w-full mb-2">
+            Admin
+          </Badge>
 
           <Link href={"/user/communities"} passHref>
             <Menu.Item component="a" icon={<IconUsers size={14} />}>
