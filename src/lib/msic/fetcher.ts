@@ -9,6 +9,15 @@ export function getApiRoute(path: string) {
   return `http://townsy.tech:65500${path}`;
 }
 
+/**
+ *
+ * @param path
+ * @returns
+ */
+export function getApi2Route(path: string) {
+  return `https://api-2.townsy.tech${path}`;
+}
+
 type FetcherArgsType<TBody> = {
   settings?: Omit<RequestInit, "body" | "method"> & { method?: HTTPMethods };
 } & (TBody extends undefined ? { body?: undefined } : { body: TBody });

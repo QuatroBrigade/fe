@@ -123,7 +123,7 @@ const Home: NextPage = () => {
             </>
           </Title>
           <Text className={classes.description} size="xl" mt="xl">
-            Everything you need for your community and yourself in the city!
+            Všetko čo potrebujem v meste pre moje komunity a pre seba.
           </Text>
 
           <Link href="/community/1" passHref>
@@ -134,7 +134,7 @@ const Home: NextPage = () => {
               radius="xl"
               className={classes.control}
             >
-              Join city!
+              Pridať sa!
             </Button>
           </Link>
         </Container>

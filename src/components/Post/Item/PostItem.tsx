@@ -94,9 +94,9 @@ const PostItem = ({
           <div className="p-4 grid grid-cols-1 gap-4">
             <p className="text-xl font-semibold">{title}</p>
 
-            {location && <MapPoint location={location} />}
+            {location && <MapPoint postId={id} location={location} />}
 
-            <p>{desc}</p>
+            <p className="whitespace-pre-line">{desc}</p>
           </div>
 
           <div className="px-4 py-2  border-t border-t-gray-200">

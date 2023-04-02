@@ -57,14 +57,12 @@ const Home: NextPage = () => {
         return [];
       }
 
-      return await fetcher<
-        (Pick<
-          PostType,
-          "id" | "userId" | "title" | "location" | "isPromoted"
-        > & {
+      const results = await fetcher<
+        (Pick<PostType, "id" | "userId" | "title" | "isPromoted"> & {
           walkableRadius: null | string;
           createdAt: string;
           description: string;
+          location: { lat: number; lon: number };
         })[]
       >(
         getApiRoute(
@@ -74,6 +72,11 @@ const Home: NextPage = () => {
         ),
         { settings: { signal, method: "GET" } }
       );
+
+      return results.map(({ location, ...posts }) => ({
+        ...posts,
+        location: { lat: location.lat, lng: location.lon },
+      }));
     },
     { keepPreviousData: true, staleTime: 5 * 1000, refetchOnWindowFocus: false }
   );
