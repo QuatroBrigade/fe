@@ -12,6 +12,7 @@ const useStyles = createStyles((theme) => ({
       'url(https://unsplash.com/photos/GXdKvKZkNKA/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8M3x8a29zaWNlfGVufDB8fHx8MTY4MDM5NjE4MA&force=true)',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
+    minHeight: '100vh'
   },
 
   container: {
