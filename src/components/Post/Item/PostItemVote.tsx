@@ -1,47 +1,73 @@
 import { Skeleton, Tooltip, UnstyledButton } from "@mantine/core";
 import { IconCheck, IconX } from "@tabler/icons-react";
-import { useQuery } from "@tanstack/react-query";
-import { fetcher, getApiRoute } from "lib/msic/fetcher";
 import { useState } from "react";
 import { PostType } from "types/post";
 
 type PropsType = { postId: PostType["id"] };
 
 const PostItemVote = ({ postId }: PropsType) => {
-  const [active, setActive] = useState<keyof typeof settings | null>(null);
+  const [vote, setVote] = useState<{
+    voted: null | keyof typeof settings;
+    count: { agree: number; disagree: number };
+  }>({ count: { agree: 0, disagree: 0 }, voted: null });
 
-  const { data, isLoading } = useQuery(
-    ["post", postId, "votes"],
-    async ({ signal }) => {
-      const { aff, neg } = await fetcher<{ aff: number; neg: number }>(
-        getApiRoute(`/api/post/${postId}/votes`),
-        {
-          settings: { signal, method: "GET" },
-        }
-      );
+  // const { data, isLoading } = useQuery(
+  //   ["post", postId, "votes"],
+  //   async ({ signal }) => {
+  //     const { aff, neg } = await fetcher<{ aff: number; neg: number }>(
+  //       getApiRoute(`/api/post/${postId}/votes`),
+  //       {
+  //         settings: { signal, method: "GET" },
+  //       }
+  //     );
 
-      return { agreed: aff, disagreed: neg };
-    },
-    { staleTime: Infinity, cacheTime: Infinity }
-  );
+  //     return { agreed: aff, disagreed: neg };
+  //   },
+  //   { staleTime: Infinity, cacheTime: Infinity }
+  // );
+
+  const handleVote = (choice: keyof typeof settings) => {
+    setVote((vote) => {
+      let agreeInc = 0;
+      let disagreeInc = 0;
+      let newVote = null;
+
+      if (vote.voted === null) {
+        agreeInc = choice === "agree" ? 1 : 0;
+        disagreeInc = choice === "disagree" ? 1 : 0;
+        newVote = choice;
+      } else if (vote.voted === choice) {
+        agreeInc = choice === "agree" ? -1 : 0;
+        disagreeInc = choice === "disagree" ? -1 : 0;
+      } else {
+        agreeInc = choice === "agree" ? 1 : -1;
+        disagreeInc = choice === "disagree" ? 1 : -1;
+        newVote = choice;
+      }
+
+      return {
+        count: {
+          agree: vote.count.agree + agreeInc,
+          disagree: vote.count.disagree + disagreeInc,
+        },
+        voted: newVote,
+      };
+    });
+  };
 
   return (
     <>
       <Button
-        onClick={() =>
-          setActive((active) => (active === "agree" ? null : "agree"))
-        }
-        isActive={active === "agree"}
+        onClick={() => handleVote("agree")}
+        isActive={vote.voted === "agree"}
         type="agree"
-        count={data?.agreed ?? null}
+        count={vote.count.agree}
       />
       <Button
-        onClick={() =>
-          setActive((active) => (active === "disagree" ? null : "disagree"))
-        }
-        isActive={active === "disagree"}
+        onClick={() => handleVote("disagree")}
+        isActive={vote.voted === "disagree"}
         type="disagree"
-        count={data?.disagreed ?? null}
+        count={vote.count.disagree}
       />
     </>
   );

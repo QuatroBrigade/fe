@@ -11,7 +11,7 @@ import PostItem from "components/Post/Item/PostItem";
 import Container from "components/misc/Container";
 import dayjs from "dayjs";
 import { fetcher, getApiRoute } from "lib/msic/fetcher";
-import { ParseFromUrl } from "lib/msic/url";
+import { FromUrl } from "lib/msic/url";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -44,7 +44,7 @@ const Home: NextPage = () => {
   const [page, setPage] = useState(1);
 
   const { query } = useRouter();
-  const communityId = ParseFromUrl.number(query.communityId);
+  const communityId = FromUrl.number(query.communityId);
 
   const {
     data: posts,
@@ -58,9 +58,13 @@ const Home: NextPage = () => {
       }
 
       return await fetcher<
-        (Pick<PostType, "id" | "userId" | "title" | "location"> & {
+        (Pick<
+          PostType,
+          "id" | "userId" | "title" | "location" | "isPromoted"
+        > & {
           walkableRadius: null | string;
           createdAt: string;
+          description: string;
         })[]
       >(
         getApiRoute(
@@ -131,7 +135,7 @@ const Home: NextPage = () => {
                   key={post.id}
                   post={{
                     ...post,
-                    desc: "",
+                    desc: post.description,
                     createdAt: dayjs(createdAt).toDate(),
                     radius: [],
                   }}

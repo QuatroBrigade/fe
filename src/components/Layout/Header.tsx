@@ -40,7 +40,7 @@ const Header = ({}: PropsType) => {
         </Menu.Target>
 
         <Menu.Dropdown>
-          <Badge variant="dot" className="w-full mb-2">
+          <Badge variant="dot" color="red" className="w-full mb-2">
             Admin
           </Badge>
 

@@ -1,47 +1,34 @@
-import { LatLng } from "leaflet";
-import { useState } from "react";
-import {
-  MapContainer,
-  Marker,
-  Popup,
-  TileLayer,
-  useMapEvents,
-} from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import { MapContainer, Marker, TileLayer } from "react-leaflet";
 
-type PropsType = {};
+type PropsType = { location: { lat: number; lng: number } };
 
-const _MapPoint = ({}: PropsType) => {
-  const [position, setPosition] = useState<LatLng | null>(null);
+import { icon } from "leaflet";
 
-  useMapEvents({
-    click: (event) => {
-      setPosition(event.latlng);
-    },
-  });
+let markerIcon = icon({
+  iconUrl: "/marker-icon.png",
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+});
 
-  return (
-    <>
-      {position && (
-        <Marker position={position}>
-          <Popup>You clicked here</Popup>
-        </Marker>
-      )}
-    </>
-  );
+const _MapPoint = ({ location }: PropsType) => {
+  return <Marker position={location} icon={markerIcon}></Marker>;
 };
 
-export default function MapPoint() {
+export default function MapPoint(props: PropsType) {
   return (
-    <MapContainer
-      center={{ lat: 48.720484, lng: 21.257623 }}
-      zoom={14}
-      style={{ height: "100vh" }}
-    >
-      <TileLayer
-        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      {/* <_MapPoint /> */}
-    </MapContainer>
+    <div className="overflow-hidden relative rounded pr-8">
+      <MapContainer
+        center={props.location}
+        zoom={14}
+        style={{ height: "25rem" }}
+      >
+        <TileLayer
+          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <_MapPoint {...props} />
+      </MapContainer>
+    </div>
   );
 }

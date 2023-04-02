@@ -9,6 +9,8 @@ import { icon } from "leaflet";
 
 let markerIcon = icon({
   iconUrl: "/marker-icon.png",
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
 });
 
 const _PostEditLocation = ({}: PropsType) => {
@@ -38,18 +40,23 @@ const _PostEditLocation = ({}: PropsType) => {
 
 export default function PostEditLocation() {
   return (
-    <div className="overflow-hidden relative">
-      <MapContainer
-        center={{ lat: 48.720484, lng: 21.257623 }}
-        zoom={14}
-        style={{ height: "25rem" }}
-      >
-        <TileLayer
-          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        <_PostEditLocation />
-      </MapContainer>
+    <div>
+      <p className="mb-1 font-medium">
+        Vyberte miesto <span className="text-red">*</span>
+      </p>
+      <div className="overflow-hidden relative rounded pr-8">
+        <MapContainer
+          center={{ lat: 48.720484, lng: 21.257623 }}
+          zoom={14}
+          style={{ height: "25rem" }}
+        >
+          <TileLayer
+            attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+          <_PostEditLocation />
+        </MapContainer>
+      </div>
     </div>
   );
 }

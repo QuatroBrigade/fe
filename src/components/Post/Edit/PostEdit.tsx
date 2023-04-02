@@ -7,7 +7,7 @@ import {
 } from "@mantine/core";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetcher, getApiRoute } from "lib/msic/fetcher";
-import { ParseFromUrl } from "lib/msic/url";
+import { FromUrl } from "lib/msic/url";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { PostType } from "types/post";
@@ -68,8 +68,13 @@ const PostEditLocation = dynamic(() => import("./PostEditLocation"), {
 });
 
 const PostEdit = ({}: PropsType) => {
+  const { close, opened, post, setPost } = usePostEditState(
+    ({ opened, close, post, setPost }) => ({ opened, close, post, setPost }),
+    shallow
+  );
+
   const { query } = useRouter();
-  const communityId = ParseFromUrl.number(query.communityId);
+  const communityId = FromUrl.number(query.communityId);
   const client = useQueryClient();
   const mutation = useMutation({
     mutationFn: () => {
@@ -88,7 +93,9 @@ const PostEdit = ({}: PropsType) => {
         settings: { method: "POST" },
         body: {
           post: {
-            location: [0, 0],
+            location: post.location
+              ? [post.location.lat, post.location.lng]
+              : [0, 0],
             userId: 1,
             description: post.desc,
             title: post.title,
@@ -98,19 +105,16 @@ const PostEdit = ({}: PropsType) => {
       });
     },
     onSuccess: () => {
-      client.invalidateQueries(["community", communityId]);
+      client.refetchQueries(["community", communityId]);
+      close();
     },
   });
-
-  const { close, opened, post, setPost } = usePostEditState(
-    ({ opened, close, post, setPost }) => ({ opened, close, post, setPost }),
-    shallow
-  );
 
   const theme = useMantineTheme();
 
   return (
     <Modal
+      zIndex={9999}
       size="lg"
       overlayProps={{
         color: theme.colors.gray[2],
@@ -139,8 +143,6 @@ const PostEdit = ({}: PropsType) => {
           size="lg"
         />
 
-        <PostEditLocation />
-
         <Textarea
           autosize
           minRows={4}
@@ -151,7 +153,10 @@ const PostEdit = ({}: PropsType) => {
           value={post.desc}
           onChange={(e) => setPost("desc", e.target.value)}
         />
-        <Button type="submit" size="md">
+
+        <PostEditLocation />
+
+        <Button type="submit" size="md" className="w-full">
           {post.id ? "Uložiť" : "Pridať"}
         </Button>
       </form>

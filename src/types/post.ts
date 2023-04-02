@@ -9,6 +9,7 @@ export type PostType = {
   createdAt: Date;
   location: MapPoint;
   radius: MapPoint[];
+  isPromoted: boolean;
 };
 
 export type PostCreateType = Pick<

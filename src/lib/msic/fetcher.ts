@@ -6,7 +6,7 @@ import { HTTPMethods } from "types/api";
  * @returns
  */
 export function getApiRoute(path: string) {
-  return `http://10.0.2.109${path}`;
+  return `http://townsy.tech:65500${path}`;
 }
 
 type FetcherArgsType<TBody> = {
