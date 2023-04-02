@@ -52,7 +52,7 @@ const PostItem = ({
       </UnstyledButton>
       <div className="grid grid-cols-[4.5rem_minmax(0,1fr)]">
         <div className="flex flex-col gap-4 p-2 items-start justify-start">
-          <PostItemVote />
+          <PostItemVote postId={id} />
         </div>
 
         <div className="border-l border-gray-200">

@@ -1,11 +1,29 @@
-import { Tooltip, UnstyledButton } from "@mantine/core";
+import { Skeleton, Tooltip, UnstyledButton } from "@mantine/core";
 import { IconCheck, IconX } from "@tabler/icons-react";
+import { useQuery } from "@tanstack/react-query";
+import { fetcher, getApiRoute } from "lib/msic/fetcher";
 import { useState } from "react";
+import { PostType } from "types/post";
 
-type PropsType = {};
+type PropsType = { postId: PostType["id"] };
 
-const PostItemVote = ({}: PropsType) => {
+const PostItemVote = ({ postId }: PropsType) => {
   const [active, setActive] = useState<keyof typeof settings | null>(null);
+
+  const { data, isLoading } = useQuery(
+    ["post", postId, "votes"],
+    async ({ signal }) => {
+      const { aff, neg } = await fetcher<{ aff: number; neg: number }>(
+        getApiRoute(`/api/post/${postId}/votes`),
+        {
+          settings: { signal, method: "GET" },
+        }
+      );
+
+      return { agreed: aff, disagreed: neg };
+    },
+    { staleTime: Infinity, cacheTime: Infinity }
+  );
 
   return (
     <>
@@ -15,7 +33,7 @@ const PostItemVote = ({}: PropsType) => {
         }
         isActive={active === "agree"}
         type="agree"
-        count={150}
+        count={data?.agreed ?? null}
       />
       <Button
         onClick={() =>
@@ -23,7 +41,7 @@ const PostItemVote = ({}: PropsType) => {
         }
         isActive={active === "disagree"}
         type="disagree"
-        count={2}
+        count={data?.disagreed ?? null}
       />
     </>
   );
@@ -47,7 +65,7 @@ function Button({
   onClick,
 }: {
   type: keyof typeof settings;
-  count: number;
+  count: number | null;
   isActive?: boolean;
   onClick: () => void;
 }) {
@@ -68,7 +86,11 @@ function Button({
         } w-full active:translate-y-px grid place-items-center p-2 rounded-lg`}
       >
         <Icon />
-        <p className="text-xs font-bold">{count}</p>
+        {count === null ? (
+          <Skeleton className="h-3 my-1 w-8" />
+        ) : (
+          <p className="text-xs font-bold">{count}</p>
+        )}
       </UnstyledButton>
     </Tooltip>
   );
