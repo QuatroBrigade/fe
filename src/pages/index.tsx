@@ -1,95 +1,127 @@
-import { ThemeIcon, UnstyledButton } from "@mantine/core";
-import {
-  IconBuildingCommunity,
-  IconPlus,
-  IconUsers,
-} from "@tabler/icons-react";
 import Layout from "components/Layout/Layout";
-import PostEdit, { usePostEditState } from "components/Post/Edit/PostEdit";
-import PostItem from "components/Post/Item/PostItem";
-import Container from "components/misc/Container";
 import dayjs from "dayjs";
 import type { NextPage } from "next";
-import { useState } from "react";
 import { PostType } from "types/post";
+import { createStyles, Overlay, Container, Title, Button, Text, rem } from '@mantine/core';
+import Typewriter from 'typewriter-effect';
 
-const TABS = {
-  COMMUNITY: "COMMUNITY",
-  REGION: "REGION",
-} as const;
-
-const DATA: PostType[] = [
-  {
-    id: 1,
-    userId: 1,
-    title: "Nová zastávka autobusu - Ulica 45",
-    desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore praesentium alias ad odio illo officiis, ab culpa sit! Dicta nobis ipsum corrupti voluptate fuga quam commodi quidem debitis laboriosam provident.",
-    location: {
-      lat: 1,
-      lng: 2,
-    },
-    radius: [],
-    createdAt: dayjs("2023-02-12").toDate(),
+const useStyles = createStyles((theme) => ({
+  hero: {
+    position: 'relative',
+    backgroundImage:
+      'url(https://unsplash.com/photos/GXdKvKZkNKA/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8M3x8a29zaWNlfGVufDB8fHx8MTY4MDM5NjE4MA&force=true)',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    minHeight: '100vh'
   },
-];
+
+  container: {
+    height: rem(700),
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
+    alignItems: 'flex-start',
+    paddingBottom: `calc(${theme.spacing.xl} * 6)`,
+    zIndex: 1,
+    position: 'relative',
+
+    [theme.fn.smallerThan('sm')]: {
+      height: rem(500),
+      paddingBottom: `calc(${theme.spacing.xl} * 3)`,
+    },
+  },
+
+  title: {
+    color: theme.white,
+    fontSize: rem(60),
+    fontWeight: 900,
+    lineHeight: 1.1,
+
+    [theme.fn.smallerThan('sm')]: {
+      fontSize: rem(40),
+      lineHeight: 1.2,
+    },
+
+    [theme.fn.smallerThan('xs')]: {
+      fontSize: rem(28),
+      lineHeight: 1.3,
+    },
+  },
+
+  description: {
+    color: theme.white,
+    maxWidth: 600,
+
+    [theme.fn.smallerThan('sm')]: {
+      maxWidth: '100%',
+      fontSize: theme.fontSizes.sm,
+    },
+  },
+
+  control: {
+    marginTop: `calc(${theme.spacing.xl} * 1.5)`,
+
+    [theme.fn.smallerThan('sm')]: {
+      width: '100%',
+    },
+  },
+}));
 
 const Home: NextPage = () => {
-  const [tab, setTab] = useState<keyof typeof TABS>("COMMUNITY");
-  const openNew = usePostEditState((state) => state.openNew);
+  const { classes } = useStyles();
+
   return (
-    <Layout title="Domov" className="bg-gray-100">
-      <section className="bg-white">
-        <Container className="pt-8">
-          <h1 className="font-bold mb-8">Mestská čásť Ťahanovce</h1>
+    <Layout title="Domov">
+      <div className={classes.hero}>
+        <Overlay
+          gradient="linear-gradient(180deg, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, .65) 40%)"
+          opacity={1}
+          zIndex={0}
+        />
+        <Container className={classes.container}>
+          <Title className={classes.title}>Townsy <span style={{ color: "#66D9E8" }}>Košice</span> <>
+            <Typewriter
+              options={{
+                strings: [
+                  "Západ!",
+                  "Dargovských hrdinov!",
+                  "Staré mesto!",
+                  "Ťahanovce!",
+                  "Sídlisko KVP!",
+                  "Nad jazerom!",
+                  "Barca!",
+                  "Džungľa!",
+                  "Juh!",
+                  "Kavečany!",
+                  "Košická Nová Ves!",
+                  "Krásna!",
+                  "Lorinčík!",
+                  "Luník IX!",
+                  "Myslava!",
+                  "Pereš!",
+                  "Poľov!",
+                  "Šaca!",
+                  "Šebastovce!",
+                  "Sever!",
+                  "Sídlisko Ťahanovce!",
+                  "Vyšné Opátske!"
+                ],
+                autoStart: true,
+                loop: true,
+                deleteSpeed: 70,
+              }}
+            />
+          </>
+          </Title>
+          <Text className={classes.description} size="xl" mt="xl">
+            Everything you need for your community and yourself in the city!
+          </Text>
 
-          <div className="grid grid-cols-2">
-            <UnstyledButton
-              onClick={() => setTab("REGION")}
-              className={`${
-                tab === "REGION" ? "border-primary" : "border-transparent"
-              } border-b-4 border-solid flex text-lg items-center py-2 px-4 relative gap-4 hover:bg-gray-50 justify-center`}
-            >
-              <ThemeIcon size="xl" variant="light">
-                <IconBuildingCommunity />
-              </ThemeIcon>
-              <p>Územná nástenka</p>
-            </UnstyledButton>
-            <UnstyledButton
-              onClick={() => setTab("COMMUNITY")}
-              className={`${
-                tab === "COMMUNITY" ? "border-primary" : "border-transparent"
-              } border-b-4 border-solid flex text-lg items-center py-2 px-4 relative gap-4 hover:bg-gray-50 justify-center`}
-            >
-              <ThemeIcon size="xl" variant="light">
-                <IconUsers />
-              </ThemeIcon>
-              <p>Komunitná nástenka</p>
-            </UnstyledButton>
-          </div>
+          <Button variant="gradient" size="xl" radius="xl" className={classes.control}>
+            Join city!
+          </Button>
         </Container>
-      </section>
-
-      <section>
-        <Container className="py-8">
-          <div className="grid grid-cols-1 gap-8">
-            <UnstyledButton
-              onClick={openNew}
-              className="w-full flex items-center gap-4 font-medium bg-white rounded-lg p-4 justify-center hover:shadow-xl active:translate-x-px transition-shadow"
-            >
-              <ThemeIcon size="lg" variant="light">
-                <IconPlus />
-              </ThemeIcon>
-              <p>Pridať nový príspevok</p>
-            </UnstyledButton>
-
-            {DATA.map((post) => (
-              <PostItem key={post.id} post={post} />
-            ))}
-
-            <PostEdit />
-          </div>
-        </Container>
-      </section>
+      </div>
     </Layout>
   );
 };
