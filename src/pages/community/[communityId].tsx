@@ -10,7 +10,7 @@ import PostEdit, { usePostEditState } from "components/Post/Edit/PostEdit";
 import PostItem from "components/Post/Item/PostItem";
 import Container from "components/misc/Container";
 import dayjs from "dayjs";
-import { fetcher } from "lib/msic/fetcher";
+import { fetcher, getApiRoute } from "lib/msic/fetcher";
 import { ParseFromUrl } from "lib/msic/url";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
@@ -63,9 +63,11 @@ const Home: NextPage = () => {
           createdAt: string;
         })[]
       >(
-        `${"http://10.0.2.109"}/api/community/post?communityId=${communityId}${
-          tab === "REGION" ? "&onlyIsPromoted=1" : ""
-        }`,
+        getApiRoute(
+          `/api/community/post?communityId=${communityId}${
+            tab === "REGION" ? "&onlyIsPromoted=1" : ""
+          }`
+        ),
         { settings: { signal, method: "GET" } }
       );
     },
@@ -80,28 +82,28 @@ const Home: NextPage = () => {
         <Container className="pt-8">
           <h1 className="font-bold mb-8">Mestská čásť Ťahanovce</h1>
 
-          <div className="grid grid-cols-2">
+          <div className="grid md:grid-cols-2 grid-cols-1">
             <UnstyledButton
               onClick={() => setTab("REGION")}
               className={`${
                 tab === "REGION" ? "border-primary" : "border-transparent"
-              } border-b-4 border-solid flex text-lg items-center py-2 px-4 relative gap-4 hover:bg-gray-50 justify-center`}
+              } border-l-4 md:border-l-0 md:border-b-4 border-solid flex items-center py-2 px-4 relative gap-4 hover:bg-gray-50 justify-start md:justify-center`}
             >
               <ThemeIcon size="xl" variant="light">
                 <IconBuildingCommunity />
               </ThemeIcon>
-              <p>Územná nástenka</p>
+              <p className="text-base md:text-lg">Územná nástenka</p>
             </UnstyledButton>
             <UnstyledButton
               onClick={() => setTab("COMMUNITY")}
               className={`${
                 tab === "COMMUNITY" ? "border-primary" : "border-transparent"
-              } border-b-4 border-solid flex text-lg items-center py-2 px-4 relative gap-4 hover:bg-gray-50 justify-center`}
+              } border-l-4 md:border-l-0 md:border-b-4 border-solid flex items-center py-2 px-4 relative gap-4 hover:bg-gray-50 justify-start md:justify-center`}
             >
               <ThemeIcon size="xl" variant="light">
                 <IconUsers />
               </ThemeIcon>
-              <p>Komunitná nástenka</p>
+              <p className="text-base md:text-lg">Komunitná nástenka</p>
             </UnstyledButton>
           </div>
         </Container>

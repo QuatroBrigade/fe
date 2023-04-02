@@ -6,6 +6,9 @@ import dynamic from "next/dynamic";
 const MapWithNoSSR = dynamic(() => import("./../components/Map"), {
   ssr: false,
 });
+/* const MapWithNoSSR = dynamic(() => import("./../components/Map/MapPoint"), {
+  ssr: false,
+}); */
 
 const Home: NextPage = () => {
   return (

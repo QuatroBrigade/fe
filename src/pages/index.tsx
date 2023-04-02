@@ -9,6 +9,7 @@ import {
 } from "@mantine/core";
 import Layout from "components/Layout/Layout";
 import type { NextPage } from "next";
+import Link from "next/link";
 import Typewriter from "typewriter-effect";
 
 const useStyles = createStyles((theme) => ({
@@ -77,7 +78,7 @@ const Home: NextPage = () => {
   const { classes } = useStyles();
 
   return (
-    <Layout title="Domov">
+    <Layout title="Domov" withHeader={false}>
       <div className={classes.hero}>
         <Overlay
           gradient="linear-gradient(180deg, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, .65) 40%)"
@@ -125,14 +126,17 @@ const Home: NextPage = () => {
             Everything you need for your community and yourself in the city!
           </Text>
 
-          <Button
-            variant="gradient"
-            size="xl"
-            radius="xl"
-            className={classes.control}
-          >
-            Join city!
-          </Button>
+          <Link href="/community/1" passHref>
+            <Button
+              component="a"
+              variant="gradient"
+              size="xl"
+              radius="xl"
+              className={classes.control}
+            >
+              Join city!
+            </Button>
+          </Link>
         </Container>
       </div>
     </Layout>

@@ -3,9 +3,19 @@ import Head from "next/head";
 import { ReactNode } from "react";
 import Header from "./Header";
 
-type PropsType = { children: ReactNode; title?: string; className?: string };
+type PropsType = {
+  children: ReactNode;
+  title?: string;
+  className?: string;
+  withHeader?: boolean;
+};
 
-const Layout = ({ children, title, className = "" }: PropsType) => {
+const Layout = ({
+  children,
+  title,
+  className = "",
+  withHeader = true,
+}: PropsType) => {
   return (
     <>
       <Head>
@@ -15,7 +25,7 @@ const Layout = ({ children, title, className = "" }: PropsType) => {
         />
         <title>{`${title ? `${title} | ` : ""}${config.name}`}</title>
       </Head>
-      <Header />
+      {withHeader && <Header />}
       <main className={`${className} min-h-full w-full flex-shrink-0`}>
         {children}
       </main>
