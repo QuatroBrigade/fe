@@ -1,4 +1,4 @@
-import { Badge, Menu, ThemeIcon, UnstyledButton } from "@mantine/core";
+import { Badge, Button, Menu, ThemeIcon, UnstyledButton } from "@mantine/core";
 import {
   IconListDetails,
   IconLogout,
@@ -24,42 +24,50 @@ const Header = ({}: PropsType) => {
         </Link>
       </div>
 
-      <Menu shadow="md" width={200} position="bottom-end">
-        <Menu.Target>
-          <UnstyledButton className="flex active:translate-y-px border-solid items-center gap-2 p-1 border border-gray-200 rounded-full pr-3">
-            <ThemeIcon
-              variant="light"
-              color="gray"
-              size="lg"
-              className="rounded-full"
-            >
-              <IconMenu2 size={20} />
-            </ThemeIcon>
-            <p className="font-semibold text-gray-700">John D.</p>
-          </UnstyledButton>
-        </Menu.Target>
+      <div className="flex items-center gap-4">
+        <Link href="/map" passHref>
+          <Button component="a" variant="white" color="dark">
+            Nájdite v na mape
+          </Button>
+        </Link>
 
-        <Menu.Dropdown>
-          <Badge variant="dot" color="red" className="w-full mb-2">
-            Admin
-          </Badge>
+        <Menu shadow="md" width={200} position="bottom-end">
+          <Menu.Target>
+            <UnstyledButton className="flex active:translate-y-px border-solid items-center gap-2 p-1 border border-gray-200 rounded-full pr-3">
+              <ThemeIcon
+                variant="light"
+                color="gray"
+                size="lg"
+                className="rounded-full"
+              >
+                <IconMenu2 size={20} />
+              </ThemeIcon>
+              <p className="font-semibold text-gray-700">John D.</p>
+            </UnstyledButton>
+          </Menu.Target>
 
-          <Link href={"/user/communities"} passHref>
-            <Menu.Item component="a" icon={<IconUsers size={14} />}>
-              Moje komunity
+          <Menu.Dropdown>
+            <Badge variant="dot" color="red" className="w-full mb-2">
+              Admin
+            </Badge>
+
+            <Link href={"/user/communities"} passHref>
+              <Menu.Item component="a" icon={<IconUsers size={14} />}>
+                Moje komunity
+              </Menu.Item>
+            </Link>
+            <Menu.Item icon={<IconListDetails size={14} />}>
+              Moje príspevky
             </Menu.Item>
-          </Link>
-          <Menu.Item icon={<IconListDetails size={14} />}>
-            Moje príspevky
-          </Menu.Item>
 
-          <Menu.Divider />
+            <Menu.Divider />
 
-          <Menu.Item color="red" icon={<IconLogout size={14} />}>
-            Odhlásiť sa
-          </Menu.Item>
-        </Menu.Dropdown>
-      </Menu>
+            <Menu.Item color="red" icon={<IconLogout size={14} />}>
+              Odhlásiť sa
+            </Menu.Item>
+          </Menu.Dropdown>
+        </Menu>
+      </div>
     </header>
   );
 };
