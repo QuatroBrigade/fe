@@ -1,6 +1,7 @@
+import { Button } from "@mantine/core";
 import { LatLng, icon } from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   MapContainer,
   Marker,
@@ -10,17 +11,8 @@ import {
   useMapEvents,
 } from "react-leaflet";
 
-const latData = [
-  { lat: 48.733832662193734, lng: 21.26137733459473 },
-  { lat: 48.71973471841844, lng: 21.24283790588379 },
-  { lat: 48.72749190745973, lng: 21.256828308105472 },
-  { lat: 48.72635954568596, lng: 21.26189231872559 },
-  { lat: 48.72868085987995, lng: 21.250047683715824 },
-];
-
-const pointSmall = "https://unpkg.com/leaflet@1.0.3/dist/images/layers-2x.png";
-const pointBig =
-  "https://unpkg.com/leaflet@1.0.3/dist/images/marker-icon-2x.png";
+const pointSmall = "https://unpkg.com/leaflet@1.0.3/dist/images/marker-icon-2x.png";
+const pointBig = "/Map_pin_icon.png"
 
 // handle icon
 const iconBig = icon({
@@ -66,29 +58,64 @@ export default function Map() {
   const [geoData, setGeoData] = useState({ lat: 48.727035, lng: 21.254345 });
   const [position, setPosition] = useState<LatLng | null>(null);
   const [showMarkers, setShowMarkers] = useState(true);
+  const [poiData, setPoiData] = useState([])
+  const [filterList, setFilterList] = useState([])
+  const [currentFilter, setCurrentFilter] = useState("");
+  const [currentFilteredData, setCurrentFilteredData] = useState([])
 
   // handle click
-  const handleData = (data: LatLng) => {
+  const handleData = async (data: LatLng) => {
     console.log(data);
     setPosition(data);
+
+    await fetch("https://api-1.townsy.tech/api/poi?x=" + data.lng + "&y=" + data.lat, { method: "POST" })
+      .then((res) => res.json())
+      .then((dataPoi) => setPoiData(dataPoi));
+
+    await fetch("https://api-1.townsy.tech/api/poi/filterlist", { method: "GET" })
+      .then((res) => res.json())
+      .then((dataFilter) => {
+        setFilterList(dataFilter);
+        setCurrentFilter(dataFilter[Math.ceil(Math.random() * 3)].filter_type);
+      });
+
   };
 
+  useEffect(() => {
+    setCurrentFilteredData(poiData.filter((data: any) => {
+      return data.filter_type === currentFilter
+    }));
+  }, [currentFilter])
+
   return (
-    <MapContainer center={geoData} zoom={14} style={{ height: "100vh" }}>
-      <TileLayer
-        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      <MyComponent handler={handleData} />
-      {position && (
-        <Marker position={position} icon={iconBig}>
-          <Popup>You clicked here</Popup>
-        </Marker>
-      )}
-      {showMarkers &&
-        latData.map((component, index) => (
-          <Marker key={index} position={component} icon={iconSmall}></Marker>
-        ))}
-    </MapContainer>
+    <>
+      <><Button.Group className="gap-2 flex-wrap mb-4 mt-4 justify-center">
+        {filterList &&
+          filterList.map((component: any, index) => {
+            return (<Button key={index} variant={currentFilter === component.filter_type ? "filled" : "default"} onClick={() => setCurrentFilter(component.filter_type)}>{component.filter_type}</Button>)
+          })}
+      </Button.Group>
+      </>
+      <>
+        <MapContainer center={geoData} zoom={14} style={{ height: "70vh" }}>
+          <TileLayer
+            attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+          <MyComponent handler={handleData} />
+          {position && (
+            <Marker position={position} icon={iconBig}>
+              <Popup>You clicked here</Popup>
+            </Marker>
+          )}
+          {showMarkers &&
+            currentFilteredData.map((component: any, index) => {
+              return (
+                <Marker key={index} position={{ lat: component.lon, lng: component.lat }} icon={iconSmall}></Marker>
+              )
+            })}
+        </MapContainer>
+      </>
+    </>
   );
 }
