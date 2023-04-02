@@ -87,7 +87,7 @@ function Button({
       >
         <Icon />
         {count === null ? (
-          <Skeleton className="h-3 my-1 w-8" />
+          <Skeleton className="h-3 mt-1 w-8" />
         ) : (
           <p className="text-xs font-bold">{count}</p>
         )}

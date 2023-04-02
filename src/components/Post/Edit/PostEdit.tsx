@@ -5,6 +5,10 @@ import {
   Textarea,
   useMantineTheme,
 } from "@mantine/core";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { fetcher, getApiRoute } from "lib/msic/fetcher";
+import { ParseFromUrl } from "lib/msic/url";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { PostType } from "types/post";
 import { create } from "zustand";
@@ -57,6 +61,40 @@ const PostEdit = ({}: PropsType) => {
     ...defaultPost,
   });
 
+  const { query } = useRouter();
+  const communityId = ParseFromUrl.number(query.communityId);
+  const client = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: () => {
+      return fetcher<
+        {},
+        {
+          post: {
+            title: string;
+            description: string;
+            location: [number, number];
+            userId: number;
+            communityId: number | null;
+          };
+        }
+      >(getApiRoute("/api/post/new"), {
+        settings: { method: "POST" },
+        body: {
+          post: {
+            location: [0, 0],
+            userId: 1,
+            description: post.desc,
+            title: post.title,
+            communityId,
+          },
+        },
+      });
+    },
+    onSuccess: () => {
+      client.invalidateQueries(["community", communityId]);
+    },
+  });
+
   const setPostValue = <
     TKey extends keyof T,
     T = Pick<
@@ -94,7 +132,14 @@ const PostEdit = ({}: PropsType) => {
       onClose={close}
       title={post.id ? "Upraviť príspevok" : "Pridať nový príspevok"}
     >
-      <form noValidate className="grid grid-cols-1 gap-4">
+      <form
+        noValidate
+        className="grid grid-cols-1 gap-4"
+        onSubmit={(e) => {
+          e.preventDefault();
+          mutation.mutate();
+        }}
+      >
         <TextInput
           value={post.title}
           onChange={(e) => setPostValue("title", e.target.value)}
@@ -113,7 +158,9 @@ const PostEdit = ({}: PropsType) => {
           value={post.desc}
           onChange={(e) => setPostValue("desc", e.target.value)}
         />
-        <Button size="md">{post.id ? "Uložiť" : "Pridať"}</Button>
+        <Button type="submit" size="md">
+          {post.id ? "Uložiť" : "Pridať"}
+        </Button>
       </form>
     </Modal>
   );

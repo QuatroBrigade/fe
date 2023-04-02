@@ -1,17 +1,14 @@
 import {
   AspectRatio,
   Badge,
-  Box,
   Button,
   Card,
-  Tooltip,
   UnstyledButton,
 } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import imgMap1 from "@public/map1.png";
 import { IconChevronsUp, IconEdit, IconMessage } from "@tabler/icons-react";
 import dayjs from "dayjs";
-import { printDateInPastRelative } from "lib/date";
 import Image from "next/image";
 import { PostType } from "types/post";
 import { usePostEditState } from "../Edit/PostEdit";
@@ -62,17 +59,9 @@ const PostItem = ({
               <Badge>Občan</Badge>
             </div>
 
-            <Tooltip
-              label={dayjs(createdAt).format("DD.MM.YYYY")}
-              position="bottom"
-            >
-              <Box
-                component="p"
-                className="text-xs text-gray-600  w-fit cursor-pointer"
-              >
-                {printDateInPastRelative(createdAt)}
-              </Box>
-            </Tooltip>
+            <p className="text-xs text-gray-600">
+              {dayjs(createdAt).format("DD.MM.YYYY")}
+            </p>
           </div>
 
           <div className="p-4 grid grid-cols-1 gap-4">

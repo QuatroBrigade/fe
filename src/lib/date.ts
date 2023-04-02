@@ -10,5 +10,5 @@ dayjs.extend(dayjsRelativePlugin);
  * @returns
  */
 export function printDateInPastRelative(date: Date | Dayjs): string {
-  return dayjs().locale("sk").to(dayjs(date));
+  return dayjs().startOf("day").locale("sk").to(dayjs(date));
 }
